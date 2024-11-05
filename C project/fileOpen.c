@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+/*this */
 int main(){
 
 
@@ -13,10 +13,10 @@ int main(){
         while(fgets(text,1000,ptrf)){
 
             printf("%s",text);
-
-            
         }
     }
+
+    
     fclose(ptrf);
     return 0;
 }

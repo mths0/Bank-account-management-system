@@ -21,6 +21,8 @@ void addAccount(Account account[], int* num_account);
 void displayAll(Account accounts[], int size);
 int loadAccounts(Account accounts[100]);/*load all data to an array */
 void saveAccounts(Account account[], int num_account);
+int isAccount(Account accounts[],int num_accounts, int account_number);
+void search(Account accounts[], int num_accounts, int account_number);
 
 
 int main(){
@@ -33,32 +35,37 @@ int main(){
 
         if (choice == 1)
         {
+            system("clear");
             addAccount(accounts,&num_of_accounts);
             saveAccounts(accounts,num_of_accounts);
         }
         else if(choice == 2){
-            displayAll(accounts,num_of_accounts);
+            //displayAll(accounts,num_of_accounts);
         }else if(choice == 3){
-            displayAll(accounts,num_of_accounts);
+            //displayAll(accounts,num_of_accounts);
         }else if(choice == 4){
-            displayAll(accounts,num_of_accounts);
+            //displayAll(accounts,num_of_accounts);
         }else if(choice == 5){
-            displayAll(accounts,num_of_accounts);
+            long account_number;
+            system("clear");
+            printf("Enter account number: ");
+            scanf("%ld",&account_number);
+            if(isAccount(accounts, num_of_accounts, account_number)){
+                 search(accounts,num_of_accounts ,account_number);
+            }
+           
         }else if(choice == 6){
             displayAll(accounts,num_of_accounts);
         }else if(choice == 7){
-            displayAll(accounts,num_of_accounts);
+            //displayAll(accounts,num_of_accounts);
             
         }else if(choice == 8){
             system("clear");
             printf("==========================================================\n");
             printf("===========Thank you for Banking With BEST BANK===========\n");
-            printf("==========================================================\n");
-
-            
+            printf("==========================================================\n"); 
         }else{
             printf("\nInvalid choice");
-
         }
         
 
@@ -68,21 +75,57 @@ int main(){
 
     return 0;
 }
+
+void search(Account accounts[], int num_accounts, int account_number){
+    /*only call when account_number is found using isAccount func*/
+    int i;
+
+    for(i = 0; i<num_accounts ; i++){
+        printf("\nAccount Number: %ld\n",accounts[i].Acc_number);
+        printf("Account Name: %s\n",accounts[i].name);
+        printf("Account Email: %s\n",accounts[i].email);
+        printf("Account Balance: %ld\n",accounts[i].balance);
+        return;
+    }
+
+}
+
+int isAccount(Account accounts[],int num_accounts, int account_number){
+    /*
+    will return 1 if account number is found. else 0.
+    need to take input from main 
+     */
+    int i;
+  
+    for(i = 0; i< num_accounts; i++){
+        if(accounts[i].Acc_number == account_number){
+          return 1 ;
+        }
+    }
+    /*will print this when no account was found*/
+    printf("\nSorry, There is no account with this Number");
+    return 0 ;
+
+}
+
+//todo
 void addAccount(Account accounts[], int* num_account){
-
     Account newAccount;
-
+    //Todo
+    /* must put condion for account number 
+        todo and email must be like ( xxx@xxx.xxx )
+    */ 
     printf("\nEnter your Account number: ");
     scanf("%d",&newAccount.Acc_number);
     getchar();
 
-    printf("\nEnter your Name: ");
+    printf("Enter your Name: ");
     scanf("%s",&newAccount.name);
 
-    printf("\nEnter your Email: ");
+    printf("Enter your Email: ");
     scanf("%s",&newAccount.email);
 
-    printf("\nEnter your Balance: ");
+    printf("Enter your Balance: ");
     scanf("%f",&newAccount.balance);
 
     newAccount.number_of_operation= 0;
@@ -113,7 +156,7 @@ void saveAccounts(Account accounts[], int num_account){
       // Open a file in binary write mode
     FILE* file = fopen("Accounts.bin", "wb");
     if (file == NULL) {
-        perror("Error opening file");
+        perror("Error while opening file");
         return;
     }
     // Write the data to the file
@@ -126,7 +169,7 @@ void saveAccounts(Account accounts[], int num_account){
     }
     // Close the file
     fclose(file);
-    printf("Struct data written to Binary file "
+    printf("data was written to Binary file "
            "successfully.\n");
 }
 

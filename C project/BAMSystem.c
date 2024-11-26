@@ -103,7 +103,7 @@ int isAccount(Account accounts[],int num_accounts, int account_number){
         }
     }
     /*will print this when no account was found*/
-    printf("\nSorry, There is no account with this Number");
+    // printf("\nSorry, There is no account with this Number");
     return 0 ;
 
 }
@@ -111,12 +111,18 @@ int isAccount(Account accounts[],int num_accounts, int account_number){
 //todo
 void addAccount(Account accounts[], int* num_account){
     Account newAccount;
+    int new_account_number;
     //Todo
     /* must put condion for account number 
         todo and email must be like ( xxx@xxx.xxx )
     */ 
     printf("\nEnter your Account number: ");
-    scanf("%d",&newAccount.Acc_number);
+    scanf("%d",&new_account_number);
+    if(isAccount(accounts,*num_account,new_account_number)){
+        printf("Sorry, this number is not available\n");
+        return;
+    }
+    newAccount.Acc_number = new_account_number;
     getchar();
 
     printf("Enter your Name: ");

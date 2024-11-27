@@ -103,7 +103,7 @@ void addOperation(Account accounts[], int num_accounts)
     char OP;
     int i, j;
     long account_number;
-    double user_operation;
+    double user_operation = 0;
 
     system("clear");
     printf("Enter account Number: ");
@@ -112,58 +112,59 @@ void addOperation(Account accounts[], int num_accounts)
     for (i = 0; i < num_accounts; i++)
     {
         if (accounts[i].Acc_number == account_number)
+        {
             printf("\nHello %s\n", accounts[i].name);
-        printf("\nYour Balance: %.3f", accounts[i].balance);
-        printf("\nWhat Operation you want?");
-        printf("\n -Deposit [D/d]");
-        printf("\n -Withdraw[W/w]");
-        printf("\n--> ");
-        scanf("%s", &OP);
-        printf("\nOnly put positive values!");
+            printf("\nYour Balance: %.3f", accounts[i].balance);
+            printf("\nWhat Operation you want?");
+            printf("\n -Deposit [D/d]");
+            printf("\n -Withdraw[W/w]");
+            printf("\n--> ");
+            scanf(" %c", &OP);
 
-        //! fix
-        if (OP == 100 || OP == 68)
-        { /*deposit*/
-            printf("\nHow much you want to Deposit: ");
-            scanf("%lf", &user_operation);
+            //! fix
+            if (OP == 100 || OP == 68)
+            { /*deposit*/
+                printf("\nHow much you want to Deposit: ");
+                scanf("%lf", &user_operation);
 
-            if (user_operation > 0)
-            {
-                accounts[i].balance += user_operation;
-                /*to put amount ant type of operation at the end*/
-                accounts[i].operations[accounts[i].number_of_operation].amount = user_operation;
-                accounts[i].operations[accounts[i].number_of_operation].type = 'D';
-                accounts[i].number_of_operation++;
-                printf("\nYour new Balance: %.3lf", accounts[i].balance);
-                return;
-            }
-            else
-            {
-                printf("ERROR, Only positive values!");
-            }
-        }
-        else if (OP == 119 || OP == 87)
-        { /*withdraw*/
-            printf("\nHow much you want to Withdraw: ");
-            scanf("%lf", &user_operation);
-            if (user_operation > 0)
-            {
-                if (accounts[i].balance >= user_operation)
+                if (user_operation > 0)
                 {
-                    accounts[i].balance -= user_operation;
+                    accounts[i].balance += user_operation;
                     /*to put amount ant type of operation at the end*/
                     accounts[i].operations[accounts[i].number_of_operation].amount = user_operation;
-                    accounts[i].operations[accounts[i].number_of_operation].type = 'W';
+                    accounts[i].operations[accounts[i].number_of_operation].type = 'D';
                     accounts[i].number_of_operation++;
                     printf("\nYour new Balance: %.3lf", accounts[i].balance);
                     return;
                 }
-                printf("\nSorry, you don't have enough Balance.");
-                return;
+                else
+                {
+                    printf("ERROR, Only positive values!");
+                }
             }
-            else
-            {
-                printf("ERROR, Only positive values!");
+            else if (OP == 119 || OP == 87)
+            { /*withdraw*/
+                printf("\nHow much you want to Withdraw: ");
+                scanf("%lf", &user_operation);
+                if (user_operation > 0)
+                {
+                    if (accounts[i].balance >= user_operation)
+                    {
+                        accounts[i].balance -= user_operation;
+                        /*to put amount ant type of operation at the end*/
+                        accounts[i].operations[accounts[i].number_of_operation].amount = user_operation;
+                        accounts[i].operations[accounts[i].number_of_operation].type = 'W';
+                        accounts[i].number_of_operation++;
+                        printf("\nYour new Balance: %.3lf", accounts[i].balance);
+                        return;
+                    }
+                    printf("\nSorry, you don't have enough Balance.");
+                    return;
+                }
+                else
+                {
+                    printf("ERROR, Only positive values!");
+                }
             }
         }
     }
@@ -267,10 +268,13 @@ void search(Account accounts[], int num_accounts)
             printf("Account Email: %s\n", accounts[i].email);
             printf("Account Balance: %.3f\n", accounts[i].balance);
             printf("Number of operation: %d\n", accounts[i].number_of_operation);
-            printf("Operation Summery:\n");
-            for (j = 0; j < accounts[i].number_of_operation; j++)
+            if (accounts[i].number_of_operation)
             {
-                printf("%d--%c[%.3f]\n", j + 1, accounts[i].operations[j].type, accounts[i].operations[j].amount);
+                printf("Operation Summery:\n");
+                for (j = 0; j < accounts[i].number_of_operation; j++)
+                {
+                    printf("%d--%c[%.3f]\n", j + 1, accounts[i].operations[j].type, accounts[i].operations[j].amount);
+                }
             }
             return;
         }

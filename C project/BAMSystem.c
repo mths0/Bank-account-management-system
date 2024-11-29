@@ -21,24 +21,24 @@ typedef struct
 } Account;
 
 void menu();
-void addAccount(Account account[], int *num_account);
+void addAccount(Account account[], int* num_account);
 void displayAll(Account accounts[], int size);
 int loadAccounts(Account accounts[100]); /*load all data to an array */
 void saveAccounts(Account account[], int num_account);
 int isAccount(Account accounts[], int num_accounts, int account_number);
 void search(Account accounts[], int num_accounts);
-void deleteAccount(Account accounts[], int *num_accounts, long account_number);
+void deleteAccount(Account accounts[], int* num_accounts, long account_number);
 void updateAccount(Account accounts[], int num_accounts);
 void toUpper();
-void deleteHolerAccounts(Account accounts[], int *num_accounts);
+void deleteHolerAccounts(Account accounts[], int* num_accounts);
 // todo
 void printOperation(Account accounts[], int num_accounts);
 void addOperation(Account accounts[], int num_accounts);
 
 int emailCheck(char x[]);/* i will use this in addAccount*/
-int isAlphabetic(const char *name);
-void toUpperCase(char *name);
-int isSameString(const char x[],const char y[]);
+int isAlphabetic(const char* name);
+void toUpperCase(char* name);
+int isSameString(const char x[], const char y[]);
 
 
 
@@ -67,7 +67,7 @@ int main()
             saveAccounts(accounts, num_of_accounts);
         }
         else if (choice == 3)
-        {   
+        {
             int account_number = 0;
             system("clear");
             printf("Enter account Number to Delete: ");
@@ -116,35 +116,30 @@ int isSameString(const char x[], const char y[]) {
     return strcmp(x, y) == 0;
 }
 
-void deleteHolerAccounts(Account accounts[], int *num_accounts){
+void deleteHolerAccounts(Account accounts[], int* num_accounts) {
     char name[MAX];
-    int i=0,j;
+    int i = 0, j;
     printf("Enter Account holder's name to delete all his Accounts:");
     getchar();
     fgets(name, MAX, stdin);
-    name[strcspn(name,"\n")] = '\0';
+    name[strcspn(name, "\n")] = '\0';
     toUpperCase(name);
-    if(!isAlphabetic(name)){
+    if (!isAlphabetic(name)) {
         printf("Wrong Name format ");
         return;
     }
-
-    
-
-    
-
     for (i = 0; i < *num_accounts; i++) {
-    if (isSameString(name, accounts[i].name)) {
-        deleteAccount(accounts, num_accounts, accounts[i].Acc_number);
-        i--; // Adjust index to re-check the current position
+        if (isSameString(name, accounts[i].name)) {
+            deleteAccount(accounts, num_accounts, accounts[i].Acc_number);
+            i--; // Adjust index to re-check the current position
+        }
     }
-}
 
 }
-int isAlphabetic(const char *name) {
+int isAlphabetic(const char* name) {
     if (name == NULL || name[0] == '\0') {
-    return 0; // Invalid input
-}
+        return 0; // Invalid input
+    }
 
     for (int i = 0; name[i] != '\0'; i++) {
         if (!isalpha(name[i]) && name[i] != ' ') {
@@ -154,58 +149,65 @@ int isAlphabetic(const char *name) {
     return 1; // All characters are valid
 }
 
-void toUpperCase(char *name) {
+void toUpperCase(char* name) {
     for (int i = 0; name[i] != '\0'; i++) {
         name[i] = toupper(name[i]); // Convert each character to uppercase
     }
 }
-int emailCheck(char x[]){    
+int emailCheck(char x[]) {
     /*
-    this function counts distence between start of email until @ 
-    then until  . until the end  */
-int start =0,at = 0, comma =0;
-char* pemail = x;
+    this function counts distance between start of email until @
+    then until  . until the end
+    last it counts the difference between (start , @ , . , end)
+    then using if you can control how do you want */
+    int start = 0, at = 0, comma = 0;
+    char* pemail = x;
 
-while (*pemail != '@' && *pemail != '\0' && isalnum(*pemail))
-{
-    start++;
-    pemail++;
-    
-}
-if(*pemail != '@'){
-    goto wrong;
-}
-pemail++;/*skips @*/
-
-while (*pemail != '.' && *pemail != '\0' && isalnum(*pemail))
-{
-    
-    at++;
-    pemail++;
-    
-}
-if(*pemail != '.'){
-    goto wrong;
-}
-pemail++;/*skips @*/
-while (*pemail != 0 && isalpha(*pemail))
-{
-      if(*pemail == '.'){
+    while (*pemail != '@' && *pemail != '\0' && isalnum(*pemail))
+    {
+        start++;
         pemail++;
-        continue;
+
     }
-    comma++;
-    pemail++;
-    
-}
+    if (*pemail != '@') {
+        goto wrong;
+    }
+    pemail++;/*skips @*/
+
+    while (*pemail != '.' && *pemail != '\0' && isalnum(*pemail))
+    {
+
+        at++;
+        pemail++;
+
+    }
+    if (*pemail != '.') {
+        goto wrong;
+    }
+    pemail++;/*skips @*/
+    while (*pemail != 0 && isalpha(*pemail))
+    {
+        if (*pemail == '.') {
+            pemail++;
+            continue;
+        }
+        comma++;
+        pemail++;
+
+    }
 
 wrong:
-if(start >=3 && at >= 3 && comma >= 3){//to control email checker.
-    return 1;
-}else{
-    printf("\nWrong email\n");
-    return 0;
-}
+    /*
+    to control email checker.
+
+    */
+    if (start >= 3 && at >= 3 && comma >= 3) {
+        return 1;
+    }
+    else {
+        printf("\nWrong email\n");
+        return 0;
+    }
 
 }
 // todo
@@ -338,12 +340,12 @@ void updateAccount(Account accounts[], int num_accounts)
     }
     printf("Sorry. Account not found!");
 }
-void deleteAccount(Account accounts[], int *num_accounts, long account_number)
+void deleteAccount(Account accounts[], int* num_accounts, long account_number)
 {
     int i, j;
 
 
-    
+
 
     for (i = 0; i < *num_accounts; i++)
     {
@@ -352,7 +354,7 @@ void deleteAccount(Account accounts[], int *num_accounts, long account_number)
 
             printf("Account -%ld- was deleted successfully.\n", accounts[i].Acc_number);
             accounts[i] = accounts[*num_accounts - 1];
-            
+
 
             (*num_accounts)--;
             return;
@@ -415,7 +417,7 @@ int isAccount(Account accounts[], int num_accounts, int account_number)
 }
 
 // todo
-void addAccount(Account accounts[], int *num_account)
+void addAccount(Account accounts[], int* num_account)
 {
     Account newAccount;
     long new_account_number, i;
@@ -438,8 +440,8 @@ void addAccount(Account accounts[], int *num_account)
     getchar();
 
     printf("Enter your Name: ");
-    fgets(newAccount.name, MAX,stdin);
-    newAccount.name[strcspn(newAccount.name,"\n")] = '\0';
+    fgets(newAccount.name, MAX, stdin);
+    newAccount.name[strcspn(newAccount.name, "\n")] = '\0';
 
     if (!isAlphabetic(newAccount.name)) {
         printf("Error: wrong format.\n");
@@ -448,12 +450,12 @@ void addAccount(Account accounts[], int *num_account)
 
     toUpperCase(newAccount.name); /*Convert the name to uppercase*/
 
-    
+
 
     printf("Enter your Email: ");
     fgets(newAccount.email, MAX, stdin);
-    newAccount.email[strcspn(newAccount.email,"\n")] = '\0';
-    if(!emailCheck(newAccount.email)){
+    newAccount.email[strcspn(newAccount.email, "\n")] = '\0';
+    if (!emailCheck(newAccount.email)) {
         return;
     }
 
@@ -486,7 +488,7 @@ void displayAll(Account accounts[], int size)
 
 void saveAccounts(Account accounts[], int num_account) {
     // Open a file in binary write mode
-    FILE *file = fopen("Accounts.bin", "wb");
+    FILE* file = fopen("Accounts.bin", "wb");
     if (file == NULL) {
         perror("Error while opening file");
         return;
@@ -512,7 +514,7 @@ void saveAccounts(Account accounts[], int num_account) {
 
 int loadAccounts(Account accounts[]) {
     // Open a file in binary read mode
-    FILE *file = fopen("Accounts.bin", "rb");
+    FILE* file = fopen("Accounts.bin", "rb");
     if (file == NULL) {
         printf("No previous account data found. Starting with an empty list.\n");
         return 0; // No accounts loaded

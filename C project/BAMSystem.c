@@ -129,7 +129,7 @@ void deleteHolerAccounts(Account accounts[], int *num_accounts)
         if (isSameString(name, accounts[i].name))
         {
             deleteAccount(accounts, num_accounts, accounts[i].Acc_number);
-            i--; // Adjust index to re-check the current position
+            i--; /*Adjust index to re-check the current position*/ 
         }
     }
     if (prevAccountNumber == *num_accounts)
@@ -143,17 +143,17 @@ int isAlphabetic(const char *name)
     int i;
     if (name == NULL || name[0] == '\0')
     {
-        return 0; // Invalid input
+        return 0; /*Invalid input*/ 
     }
 
     for (i = 0; name[i] != '\0'; i++)
     {
         if (!isalpha(name[i]) && name[i] != ' ')
         {
-            return 0; // Non-alphabetic character found
+            return 0; /*Non-alphabetic character found*/ 
         }
     }
-    return 1; // All characters are valid
+    return 1; /*All characters are valid*/ 
 }
 
 void toUpperCase(char *name)
@@ -161,7 +161,7 @@ void toUpperCase(char *name)
     int i;
     for (i = 0; name[i] != '\0'; i++)
     {
-        name[i] = toupper(name[i]); // Convert each character to uppercase
+        name[i] = toupper(name[i]); /*Convert each character to uppercase*/ 
     }
 }
 int emailCheck(char x[])
@@ -225,7 +225,7 @@ wrong:
         return 0;
     }
 }
-// todo
+
 void addOperation(Account accounts[], int num_accounts)
 {
     char OP;

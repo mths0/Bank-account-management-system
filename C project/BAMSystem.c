@@ -29,7 +29,7 @@ int isAccount(Account accounts[], int num_accounts, int account_number);
 void search(Account accounts[], int num_accounts);
 void deleteAccount(Account accounts[], int *num_accounts, long account_number);
 void updateAccount(Account accounts[], int num_accounts);
-void deleteHolerAccounts(Account accounts[], int *num_accounts);
+void deleteHolderAccounts(Account accounts[], int *num_accounts);
 void printOperation(Account accounts[], int num_accounts);
 void addOperation(Account accounts[], int num_accounts);
 int emailCheck(char x[]); /* i will use this in addAccount*/
@@ -69,7 +69,7 @@ int main()
         }
         else if (choice == 4)
         {
-            deleteHolerAccounts(accounts, &num_of_accounts);
+            deleteHolderAccounts(accounts, &num_of_accounts);
             saveAccounts(accounts, num_of_accounts);
         }
         else if (choice == 5)
@@ -109,7 +109,7 @@ int isSameString(const char x[], const char y[])
     return strcmp(x, y) == 0;
 }
 
-void deleteHolerAccounts(Account accounts[], int *num_accounts)
+void deleteHolderAccounts(Account accounts[], int *num_accounts)
 {
     char name[MAX];
     int i, j;

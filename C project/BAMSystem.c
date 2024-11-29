@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAX 50
 typedef struct
@@ -26,13 +27,23 @@ int loadAccounts(Account accounts[100]); /*load all data to an array */
 void saveAccounts(Account account[], int num_account);
 int isAccount(Account accounts[], int num_accounts, int account_number);
 void search(Account accounts[], int num_accounts);
-void deleteAccount(Account accounts[], int *num_accounts);
+void deleteAccount(Account accounts[], int *num_accounts, long account_number);
 void updateAccount(Account accounts[], int num_accounts);
 void toUpper();
 void deleteHolerAccounts(Account accounts[], int *num_accounts);
 // todo
 void printOperation(Account accounts[], int num_accounts);
 void addOperation(Account accounts[], int num_accounts);
+
+int emailCheck(char x[]);/* i will use this in addAccount*/
+int isAlphabetic(const char *name);
+void toUpperCase(char *name);
+int isSameString(const char x[],const char y[]);
+
+
+
+
+
 
 int main()
 {
@@ -56,13 +67,17 @@ int main()
             saveAccounts(accounts, num_of_accounts);
         }
         else if (choice == 3)
-        {
-            deleteAccount(accounts, &num_of_accounts);
+        {   
+            int account_number = 0;
+            system("clear");
+            printf("Enter account Number to Delete: ");
+            scanf("%ld", &account_number);
+            deleteAccount(accounts, &num_of_accounts, account_number);
             saveAccounts(accounts, num_of_accounts);
         }
         else if (choice == 4)
         {
-            // deleteHolerAccounts(accounts, &num_of_accounts);
+            deleteHolerAccounts(accounts, &num_of_accounts);
             saveAccounts(accounts, num_of_accounts);
         }
         else if (choice == 5)
@@ -97,11 +112,107 @@ int main()
 
     return 0;
 }
+int isSameString(const char x[], const char y[]) {
+    return strcmp(x, y) == 0;
+}
+
+void deleteHolerAccounts(Account accounts[], int *num_accounts){
+    char name[MAX];
+    int i=0,j;
+    printf("Enter Account holder's name to delete all his Accounts:");
+    getchar();
+    fgets(name, MAX, stdin);
+    name[strcspn(name,"\n")] = '\0';
+    toUpperCase(name);
+    if(!isAlphabetic(name)){
+        printf("Wrong Name format ");
+        return;
+    }
+
+    
+
+    
+
+    for (i = 0; i < *num_accounts; i++) {
+    if (isSameString(name, accounts[i].name)) {
+        deleteAccount(accounts, num_accounts, accounts[i].Acc_number);
+        i--; // Adjust index to re-check the current position
+    }
+}
+
+}
+int isAlphabetic(const char *name) {
+    if (name == NULL || name[0] == '\0') {
+    return 0; // Invalid input
+}
+
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalpha(name[i]) && name[i] != ' ') {
+            return 0; // Non-alphabetic character found
+        }
+    }
+    return 1; // All characters are valid
+}
+
+void toUpperCase(char *name) {
+    for (int i = 0; name[i] != '\0'; i++) {
+        name[i] = toupper(name[i]); // Convert each character to uppercase
+    }
+}
+int emailCheck(char x[]){    
+    /*
+    this function counts distence between start of email until @ 
+    then until  . until the end  */
+int start =0,at = 0, comma =0;
+char* pemail = x;
+
+while (*pemail != '@' && *pemail != '\0' && isalnum(*pemail))
+{
+    start++;
+    pemail++;
+    
+}
+if(*pemail != '@'){
+    goto wrong;
+}
+pemail++;/*skips @*/
+
+while (*pemail != '.' && *pemail != '\0' && isalnum(*pemail))
+{
+    
+    at++;
+    pemail++;
+    
+}
+if(*pemail != '.'){
+    goto wrong;
+}
+pemail++;/*skips @*/
+while (*pemail != 0 && isalpha(*pemail))
+{
+      if(*pemail == '.'){
+        pemail++;
+        continue;
+    }
+    comma++;
+    pemail++;
+    
+}
+
+wrong:
+if(start >=3 && at >= 3 && comma >= 3){//to control email checker.
+    return 1;
+}else{
+    printf("\nWrong email\n");
+    return 0;
+}
+
+}
 // todo
 void addOperation(Account accounts[], int num_accounts)
 {
     char OP;
-    int i, j;
+    int i;
     long account_number;
     double user_operation = 0;
 
@@ -117,20 +228,20 @@ void addOperation(Account accounts[], int num_accounts)
             printf("\nYour Balance: %.3f", accounts[i].balance);
             printf("\nWhat Operation you want?");
             printf("\n -Deposit [D/d]");
-            printf("\n -Withdraw[W/w]");
+            printf("\n -Withdraw [W/w]");
             printf("\n--> ");
             scanf(" %c", &OP);
 
-            //! fix
-            if (OP == 100 || OP == 68)
-            { /*deposit*/
+            printf("\nOnly put positive values!");
+
+            if (OP == 'D' || OP == 'd')
+            { // Deposit
                 printf("\nHow much you want to Deposit: ");
                 scanf("%lf", &user_operation);
 
                 if (user_operation > 0)
                 {
                     accounts[i].balance += user_operation;
-                    /*to put amount ant type of operation at the end*/
                     accounts[i].operations[accounts[i].number_of_operation].amount = user_operation;
                     accounts[i].operations[accounts[i].number_of_operation].type = 'D';
                     accounts[i].number_of_operation++;
@@ -142,16 +253,16 @@ void addOperation(Account accounts[], int num_accounts)
                     printf("ERROR, Only positive values!");
                 }
             }
-            else if (OP == 119 || OP == 87)
-            { /*withdraw*/
+            else if (OP == 'W' || OP == 'w')
+            { // Withdraw
                 printf("\nHow much you want to Withdraw: ");
                 scanf("%lf", &user_operation);
+
                 if (user_operation > 0)
                 {
                     if (accounts[i].balance >= user_operation)
                     {
                         accounts[i].balance -= user_operation;
-                        /*to put amount ant type of operation at the end*/
                         accounts[i].operations[accounts[i].number_of_operation].amount = user_operation;
                         accounts[i].operations[accounts[i].number_of_operation].type = 'W';
                         accounts[i].number_of_operation++;
@@ -159,16 +270,19 @@ void addOperation(Account accounts[], int num_accounts)
                         return;
                     }
                     printf("\nSorry, you don't have enough Balance.");
-                    return;
                 }
                 else
                 {
                     printf("ERROR, Only positive values!");
                 }
             }
+            return; // Exit after processing
         }
     }
+
+    printf("\nAccount not found.");
 }
+
 void updateAccount(Account accounts[], int num_accounts)
 {
     int i, j;
@@ -224,23 +338,21 @@ void updateAccount(Account accounts[], int num_accounts)
     }
     printf("Sorry. Account not found!");
 }
-void deleteAccount(Account accounts[], int *num_accounts)
+void deleteAccount(Account accounts[], int *num_accounts, long account_number)
 {
     int i, j;
-    long account_number;
-    Account tempAcc;
 
-    system("clear");
-    printf("Enter account Number to Delete: ");
-    scanf("%ld", &account_number);
+
+    
 
     for (i = 0; i < *num_accounts; i++)
     {
         if (accounts[i].Acc_number == account_number)
         {
 
+            printf("Account -%ld- was deleted successfully.\n", accounts[i].Acc_number);
             accounts[i] = accounts[*num_accounts - 1];
-            printf("Account was deleted!\n");
+            
 
             (*num_accounts)--;
             return;
@@ -326,10 +438,24 @@ void addAccount(Account accounts[], int *num_account)
     getchar();
 
     printf("Enter your Name: ");
-    scanf("%s", &newAccount.name);
+    fgets(newAccount.name, MAX,stdin);
+    newAccount.name[strcspn(newAccount.name,"\n")] = '\0';
+
+    if (!isAlphabetic(newAccount.name)) {
+        printf("Error: wrong format.\n");
+        return;
+    }
+
+    toUpperCase(newAccount.name); /*Convert the name to uppercase*/
+
+    
 
     printf("Enter your Email: ");
-    scanf("%s", &newAccount.email);
+    fgets(newAccount.email, MAX, stdin);
+    newAccount.email[strcspn(newAccount.email,"\n")] = '\0';
+    if(!emailCheck(newAccount.email)){
+        return;
+    }
 
     printf("Enter your Balance: ");
     scanf("%lf", &newAccount.balance);
@@ -358,42 +484,69 @@ void displayAll(Account accounts[], int size)
     }
 }
 
-void saveAccounts(Account accounts[], int num_account)
-{
-
+void saveAccounts(Account accounts[], int num_account) {
     // Open a file in binary write mode
     FILE *file = fopen("Accounts.bin", "wb");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         perror("Error while opening file");
         return;
     }
-    // Write the data to the file
-    size_t num_written = fwrite(&accounts, sizeof(Account), 1, file);
-    if (num_written != 1)
-    {
-        perror("Error writing to file");
+
+    // Write the number of accounts first
+    if (fwrite(&num_account, sizeof(int), 1, file) != 1) {
+        perror("Error writing account count");
         fclose(file);
         return;
     }
-    // Close the file
+
+    // Write the accounts array
+    if (fwrite(accounts, sizeof(Account), num_account, file) != (size_t)num_account) {
+        perror("Error writing accounts");
+        fclose(file);
+        return;
+    }
+
     fclose(file);
-    printf("data was written to Binary file "
-           "successfully.\n");
+    printf("\nData was written to Binary file successfully.\n");
 }
 
-int loadAccounts(Account accounts[])
-{
-
+int loadAccounts(Account accounts[]) {
+    // Open a file in binary read mode
     FILE *file = fopen("Accounts.bin", "rb");
-    if (file == NULL)
-    {
-        perror("Error opening file");
-        return 1;
+    if (file == NULL) {
+        printf("No previous account data found. Starting with an empty list.\n");
+        return 0; // No accounts loaded
     }
-    int count = fread(&accounts, sizeof(Account), 1, file);
-    return count; /*number of accounts loaded.*/
+
+    // Check if the file is empty
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    if (fileSize == 0) {
+        printf("The file is empty. Starting with an empty list of accounts.\n");
+        fclose(file);
+        return 0; // No accounts loaded
+    }
+    rewind(file);
+
+    int num_account = 0;
+
+    // Read the number of accounts
+    if (fread(&num_account, sizeof(int), 1, file) != 1) {
+        perror("Error reading account count");
+        fclose(file);
+        return 0;
+    }
+
+    // Read the accounts array
+    if (fread(accounts, sizeof(Account), num_account, file) != (size_t)num_account) {
+        perror("Error reading accounts");
+        fclose(file);
+        return 0;
+    }
+
     fclose(file);
+    printf("%d accounts loaded successfully.\n", num_account);
+    return num_account;
 }
 
 void menu()

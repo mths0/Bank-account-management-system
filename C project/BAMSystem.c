@@ -395,28 +395,8 @@ void search(Account accounts[], int num_accounts)
     }
     printf("Account not found..");
 }
-//! no need for it.
-int isAccount(Account accounts[], int num_accounts, int account_number)
-{
-    /*
-    will return 1 if account number is found. else 0.
-    need to take input from main
-     */
-    int i;
 
-    for (i = 0; i < num_accounts; i++)
-    {
-        if (accounts[i].Acc_number == account_number)
-        {
-            return 1;
-        }
-    }
-    /*will print this when no account was found*/
-    // printf("\nSorry, There is no account with this Number");
-    return 0;
-}
 
-// todo
 void addAccount(Account accounts[], int* num_account)
 {
     Account newAccount;
